@@ -5,6 +5,7 @@ import botController from "../../controllers/bot-controller";
 const handler: Handler = async (event: HandlerEvent) => {
 	const { message, from } = JSON.parse(event.body!);
 	await botController.onMessage(message as Message);
+	console.log(event.body);
 	console.log(JSON.stringify(from));
 	return { statusCode: 200 };
 };
