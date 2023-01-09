@@ -27,7 +27,6 @@ class BotController {
 	}
 
 	async onMessage(msg: Message) {
-		console.log(msg);
 		const text = msg.text;
 		const chatId = msg.chat.id;
 
