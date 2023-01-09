@@ -10,9 +10,7 @@ class BotController {
 			{ command: "/get_weathers", description: "Шо по погоде" },
 		]);
 
-		bot.setWebHook(
-			"https://weather-all-bot-e4etre4.netlify.app/.netlify/functions/message",
-		);
+		bot.on("polling_error", console.log);
 	}
 
 	static weatherToString(weather: IWeatherData) {
