@@ -4,7 +4,7 @@ import { IWeatherData } from "../types";
 class WeatherService {
 	async getAllKyivWeathers() {
 		const weathersResponses = await Promise.all([
-			// AccuWeatherApi.getKyivWeather(),
+			AccuWeatherApi.getKyivWeather(),
 			WeatherApi.getKyivWeather(),
 			OpenWeatherApi.getKyivWeather(),
 		]);
