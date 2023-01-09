@@ -38,27 +38,29 @@ class BotController {
 				);
 			}
 
-			if (text === "/get_weathers") {
-				const KyivWeathers = await WeatherService.getAllKyivWeathers();
+			// if (text === "/get_weathers") {
+			// 	const KyivWeathers = await WeatherService.getAllKyivWeathers();
 
-				if (!KyivWeathers.length) {
-					return bot.sendMessage(chatId!, `Ошибочка  ¯\\_(ツ)_/¯`);
-				}
+			// 	if (!KyivWeathers.length) {
+			// 		return bot.sendMessage(chatId!, `Ошибочка  ¯\\_(ツ)_/¯`);
+			// 	}
 
-				// return bot.sendMessage(chatId!, "❄☔⛅👅💨🌞☁📍🌡️🤒")
-				return bot.sendMessage(
-					chatId!,
-					`Київ:${KyivWeathers.reduce(
-						(weathersString, weather) =>
-							(weathersString += "\n" + BotController.weatherToString(weather)),
-						"",
-					)}`,
-					{
-						parse_mode: "Markdown",
-					},
-				);
-			}
-		} catch (e) {}
+			// 	// return bot.sendMessage(chatId!, "❄☔⛅👅💨🌞☁📍🌡️🤒")
+			// 	return bot.sendMessage(
+			// 		chatId!,
+			// 		`Київ:${KyivWeathers.reduce(
+			// 			(weathersString, weather) =>
+			// 				(weathersString += "\n" + BotController.weatherToString(weather)),
+			// 			"",
+			// 		)}`,
+			// 		{
+			// 			parse_mode: "Markdown",
+			// 		},
+			// 	);
+			// }
+		} catch (e) {
+			console.log(e);
+		}
 	}
 }
 
