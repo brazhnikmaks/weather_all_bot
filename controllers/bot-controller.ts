@@ -30,6 +30,8 @@ class BotController {
 		const text = msg.text;
 		const chatId = msg.chat.id;
 
+		console.log({ text, chatId, msg });
+
 		try {
 			if (text === "/start") {
 				return bot.sendMessage(
