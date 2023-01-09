@@ -21,7 +21,7 @@ class AccuWeatherApi {
 			};
 		} catch (e) {
 			// @ts-ignore
-			console.log(e.response.data);
+			// console.log(e.response.data);
 			return null;
 		}
 	}

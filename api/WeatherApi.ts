@@ -11,8 +11,6 @@ class WeatherApi {
 
 			const { current } = response.data;
 
-			console.log(response.data);
-
 			return {
 				name: "💧weather api",
 				temperature: Math.round(current.temp_c),
