@@ -1,5 +1,13 @@
 import TelegramApi from "node-telegram-bot-api";
+import { config } from "dotenv";
 
-const bot = new TelegramApi("5955184773:AAHHS6MqzjcVa9NcmClJp-dYsddCXMPapq8");
+config();
+
+const botOptions = { polling: true };
+
+const bot = new TelegramApi(
+	process.env.BOT_TOKEN as string,
+	process.env.NODE_ENV === "development" ? botOptions : undefined,
+);
 
 export { bot };
