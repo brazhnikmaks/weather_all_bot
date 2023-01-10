@@ -1,13 +1,20 @@
+import { config } from "dotenv";
 import axios from "axios";
 import { kmph_to_mps } from "../utils/";
 import { ICurrentConditionData } from "accu-weather-api-wrapper";
 import { IWeatherData } from "../types";
 
+config();
+
+// search place key for lat lon
+// `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.ACCUWEATHER_KEY}&details=true&q=${lat},${lon}`,
+
 class AccuWeatherApi {
 	static async getKyivWeather(): Promise<IWeatherData | null> {
+		if (!process.env.ACCUWEATHER_KEY) return null;
 		try {
 			const response = await axios.get<ICurrentConditionData[]>(
-				`https://dataservice.accuweather.com/currentconditions/v1/324505?apikey=W4GAsnb6xzgpAHEjUuAs2Yict2JFUGMw&details=true`,
+				`https://dataservice.accuweather.com/currentconditions/v1/324505?apikey=${process.env.ACCUWEATHER_KEY}&details=true`,
 			);
 			const { Temperature, RealFeelTemperature, Wind } = response.data[0];
 

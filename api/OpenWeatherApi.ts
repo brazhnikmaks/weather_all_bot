@@ -1,6 +1,9 @@
+import { config } from "dotenv";
 import axios from "axios";
 import { CurrentConditions } from "openweather-api-node";
 import { IWeatherData } from "../types";
+
+config();
 
 type OpenWeatherMainType = {
 	temp: number;
@@ -12,10 +15,15 @@ type OpenWeatherMainType = {
 };
 
 class OpenWeatherApi {
-	static async getKyivWeather(): Promise<IWeatherData | null> {
+	static async getWeather(
+		lat: number,
+		lon: number,
+	): Promise<IWeatherData | null> {
+		if (!process.env.OPENWEATHER_KEY || lat === undefined || lon === undefined)
+			return null;
 		try {
 			const response = await axios.get<CurrentConditions>(
-				`https://api.openweathermap.org/data/2.5/weather?lat=50.4586708&lon=30.5818284&appid=b0bdd46a984f1f1fd15cefdd8c1247df&units=metric`,
+				`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_KEY}&units=metric`,
 			);
 			const { main, wind } = response.data;
 			const { temp, feels_like } = main as unknown as OpenWeatherMainType;
