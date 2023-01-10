@@ -3,11 +3,14 @@ import { bot } from "../servises/telefram-service";
 import WeatherService from "../servises/weather-service";
 import { IWeatherData } from "../types";
 
+// all chat icons ❄☔⛅👅💨🌞☁📍🌡️🤒
+
 class BotController {
 	constructor() {
 		bot.setMyCommands([
 			{ command: "/start", description: "Запуск бота" },
-			{ command: "/get_weathers", description: "Шо по погоде" },
+			{ command: "/kyiv", description: "Шо по погоді в Києві" },
+			// { command: "/get_weathers", description: "Шо по погоді" },
 		]);
 	}
 
@@ -26,6 +29,10 @@ class BotController {
 		return `\n${name}\n${weatherString}`;
 	}
 
+	static sendError(chatId: number) {
+		return bot.sendMessage(chatId, `Помилочка  ¯\\_(ツ)_/¯`);
+	}
+
 	async onMessage(msg: Message) {
 		const text = msg.text;
 		const chatId = msg.chat.id;
@@ -34,18 +41,19 @@ class BotController {
 			if (text === "/start") {
 				return bot.sendMessage(
 					chatId,
-					`Добро пожаловать в телеграм бот погоды, воспользуйтесь кнопкой "Меню" чтобы что-то сделать`,
+					`Вітаю в телеграм боті погоди, скористайтеся кнопкою "Меню", щоб щось зробити`,
 				);
 			}
 
-			if (text === "/get_weathers") {
+			if (text === "/kyiv") {
+				bot.sendMessage(chatId!, `Чекайте, збираю інформацію...`);
+
 				const KyivWeathers = await WeatherService.getAllKyivWeathers();
 
 				if (!KyivWeathers.length) {
-					return bot.sendMessage(chatId!, `Ошибочка  ¯\\_(ツ)_/¯`);
+					return BotController.sendError(chatId);
 				}
 
-				// return bot.sendMessage(chatId!, "❄☔⛅👅💨🌞☁📍🌡️🤒")
 				return bot.sendMessage(
 					chatId!,
 					`Київ:${KyivWeathers.reduce(
