@@ -3,6 +3,9 @@ import { config } from "dotenv";
 
 config();
 
+console.log("bot");
+console.log(process.env.BOT_TOKEN);
+
 const botOptions = { polling: true };
 
 const bot = new TelegramApi(
