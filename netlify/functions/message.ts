@@ -14,7 +14,8 @@ const handler: Handler = async (event: HandlerEvent) => {
 			username: message.from?.username,
 			first_name: message.from?.first_name,
 			last_name: message.from?.last_name,
-			text: message.text,
+			...(message.text ? { text: message.text } : {}),
+			...(message.location ? { location: message.location } : {}),
 		}),
 	);
 	return { statusCode: 200 };
