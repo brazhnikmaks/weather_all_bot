@@ -5,6 +5,7 @@ import GismeteoApi from "./GismeteoApi";
 import MeteomaticsApi from "./MeteomaticsApi";
 import OpenMeteoApi from "./OpenMeteoApi";
 import TomorrowIoApi from "./TomorrowIoApi";
+import StormglassApi from "./StormglassApi";
 
 export {
 	AccuWeatherApi,
@@ -14,4 +15,5 @@ export {
 	MeteomaticsApi,
 	OpenMeteoApi,
 	TomorrowIoApi,
+	StormglassApi,
 };
