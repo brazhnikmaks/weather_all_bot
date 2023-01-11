@@ -37,11 +37,16 @@ class GismeteoApi {
 				];
 
 				if (windMatch.length) {
-					const hour = new Date(Date.now() + 7200000).getHours();
+					const dateMs = Date.now();
+					const date = new Date(dateMs);
+					const dateOffsetMs = date.getTimezoneOffset() * 60 * 1000;
+					const dateGTM2 = new Date(dateMs + dateOffsetMs + 7200000);
+					const hours = dateGTM2.getHours();
+					console.log("hours", hours);
 					let minDiff = 24;
 					let minDiffIndex = 0;
 					times.forEach((time, index) => {
-						const diff = Math.abs(hour - time);
+						const diff = Math.abs(hours - time);
 						if (minDiff > diff) {
 							minDiff = diff;
 							minDiffIndex = index;
