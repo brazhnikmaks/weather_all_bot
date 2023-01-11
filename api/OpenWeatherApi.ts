@@ -28,6 +28,8 @@ class OpenWeatherApi {
 			const { main, wind } = response.data;
 			const { temp, feels_like } = main as unknown as OpenWeatherMainType;
 
+			console.log(wind);
+
 			return {
 				name: "🌅OpenWeather",
 				temperature: Math.round(temp),
