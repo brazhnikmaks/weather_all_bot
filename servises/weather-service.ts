@@ -1,4 +1,9 @@
-import { AccuWeatherApi, WeatherApi, OpenWeatherApi } from "../api";
+import {
+	AccuWeatherApi,
+	WeatherApi,
+	OpenWeatherApi,
+	GismeteoApi,
+} from "../api";
 import { IWeatherData } from "../types";
 
 class WeatherService {
@@ -23,6 +28,11 @@ class WeatherService {
 		const accuweatherKyivWeather = await AccuWeatherApi.getKyivWeather();
 		if (accuweatherKyivWeather) {
 			KyivWeathers.push(accuweatherKyivWeather);
+		}
+
+		const gismeteoKyivWeather = await GismeteoApi.getKyivWeather();
+		if (gismeteoKyivWeather) {
+			KyivWeathers.push(gismeteoKyivWeather);
 		}
 
 		//weather by lat + lon
