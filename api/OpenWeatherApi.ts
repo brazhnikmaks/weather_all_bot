@@ -37,7 +37,7 @@ class OpenWeatherApi {
 				name: "🌅OpenWeather",
 				temperature: Math.round(temp),
 				realFeelTemperature: Math.round(feels_like),
-				wind: wind.speed * 10,
+				wind: (Math.round(wind.speed * 10) / 10).toFixed(1),
 			};
 		} catch (e) {
 			console.log(e);
