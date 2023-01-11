@@ -1,22 +1,44 @@
 import { config } from "dotenv";
 import axios from "axios";
 import { kmph_to_mps } from "../utils/";
-import { ICurrentConditionData } from "accu-weather-api-wrapper";
+import { ICurrentConditionData, ICityData } from "accu-weather-api-wrapper";
 import { IWeatherData } from "../types";
 
 config();
 
-// search place key for lat lon
-// `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.ACCUWEATHER_KEY}&details=true&q=${lat},${lon}`,
-
 class AccuWeatherApi {
-	static async getKyivWeather(): Promise<IWeatherData | null> {
-		if (!process.env.ACCUWEATHER_KEY) return null;
+	static async getWeather(
+		lat: number,
+		lon: number,
+	): Promise<IWeatherData | null> {
+		if (!process.env.ACCUWEATHER_KEY || lat === undefined || lon === undefined)
+			return null;
+
+		//place Kyiv as default
+		let placeId: number | string = 324505;
+		if (lat !== 50.459532 || lon !== 30.589909) {
+			try {
+				// search place key by lat and lon
+				const responseL = await axios.get<ICityData>(
+					`http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.ACCUWEATHER_KEY}&details=true&q=${lat},${lon}`,
+				);
+				const { Details } = responseL.data;
+				if (Details) {
+					placeId = Details.Key;
+				}
+				console.log(responseL.data);
+			} catch (e) {
+				// @ts-ignore
+				// console.log("location", e.response.data);
+				return null;
+			}
+		}
+
 		try {
-			const response = await axios.get<ICurrentConditionData[]>(
-				`https://dataservice.accuweather.com/currentconditions/v1/324505?apikey=${process.env.ACCUWEATHER_KEY}&details=true`,
+			const responseT = await axios.get<ICurrentConditionData[]>(
+				`https://dataservice.accuweather.com/currentconditions/v1/${placeId}?apikey=${process.env.ACCUWEATHER_KEY}&details=true`,
 			);
-			const { Temperature, RealFeelTemperature, Wind } = response.data[0];
+			const { Temperature, RealFeelTemperature, Wind } = responseT.data[0];
 
 			return {
 				name: "🌞AccuWeather",
@@ -28,7 +50,7 @@ class AccuWeatherApi {
 			};
 		} catch (e) {
 			// @ts-ignore
-			// console.log(e.response.data);
+			// console.log("weather", e.response.data);
 			return null;
 		}
 	}
