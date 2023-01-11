@@ -28,7 +28,10 @@ class OpenWeatherApi {
 			const { main, wind } = response.data;
 			const { temp, feels_like } = main as unknown as OpenWeatherMainType;
 
-			console.log(wind);
+			console.log(
+				`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_KEY}&units=metric`,
+			);
+			console.log(response.data);
 
 			return {
 				name: "🌅OpenWeather",
