@@ -28,7 +28,7 @@ class AccuWeatherApi {
 				}
 			} catch (e) {
 				// @ts-ignore
-				// console.log("location", e.response.data);
+				console.log("location", e.response.data);
 				return null;
 			}
 		}
@@ -49,7 +49,7 @@ class AccuWeatherApi {
 			};
 		} catch (e) {
 			// @ts-ignore
-			// console.log("weather", e.response.data);
+			console.log("weather", e.response.data);
 			return null;
 		}
 	}

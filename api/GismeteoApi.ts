@@ -66,8 +66,7 @@ class GismeteoApi {
 				wind,
 			};
 		} catch (e) {
-			// @ts-ignore
-			// console.log(e.response.data);
+			console.log(e);
 			return null;
 		}
 	}

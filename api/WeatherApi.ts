@@ -26,6 +26,7 @@ class WeatherApi {
 				wind: Math.round(kmph_to_mps(current.wind_kph) * 10) / 10,
 			};
 		} catch (e) {
+			console.log(e);
 			return null;
 		}
 	}
