@@ -4,6 +4,7 @@ import {
 	OpenWeatherApi,
 	GismeteoApi,
 	MeteomaticsApi,
+	OpenMeteoApi,
 } from "../api";
 import { IWeatherData } from "../types";
 
@@ -14,6 +15,7 @@ class WeatherService {
 			WeatherApi.getWeather(lat, lon),
 			OpenWeatherApi.getWeather(lat, lon),
 			MeteomaticsApi.getWeather(lat, lon),
+			OpenMeteoApi.getWeather(lat, lon),
 		]);
 		const weathers: IWeatherData[] = weathersResponses.filter(
 			(weatherResponse) => weatherResponse !== null,

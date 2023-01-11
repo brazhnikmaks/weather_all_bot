@@ -4,7 +4,7 @@ import { IWeatherData } from "../types";
 
 config();
 
-type IMeteomaticsParameter = {
+type MeteomaticsParamType = {
 	parameter: string;
 	coordinates: {
 		lat: number;
@@ -16,12 +16,12 @@ type IMeteomaticsParameter = {
 	}[];
 };
 
-type IMeteomaticsData = {
+type MeteomaticsDataType = {
 	version: string;
 	user: string;
 	dateGenerated: string;
 	status: string;
-	data: IMeteomaticsParameter[];
+	data: MeteomaticsParamType[];
 };
 
 class MeteomaticsApi {
@@ -32,7 +32,7 @@ class MeteomaticsApi {
 		if (!process.env.METEOMATICS_AUTH || lat === undefined || lon === undefined)
 			return null;
 		try {
-			const response = await axios.get<IMeteomaticsData>(
+			const response = await axios.get<MeteomaticsDataType>(
 				`https://${
 					process.env.METEOMATICS_AUTH
 				}@api.meteomatics.com/${new Date().toISOString()}/t_2m:C,wind_speed_10m:ms/${lat},${lon}/json`,
@@ -56,7 +56,7 @@ class MeteomaticsApi {
 			if (temperature! === undefined) return null;
 
 			return {
-				name: "🔆Meteomatics",
+				name: "⛈Meteomatics",
 				temperature: Math.round(temperature),
 				wind: wind! && (Math.round(wind * 10) / 10).toFixed(1),
 			};

@@ -3,6 +3,7 @@ import WeatherApi from "./WeatherApi";
 import OpenWeatherApi from "./OpenWeatherApi";
 import GismeteoApi from "./GismeteoApi";
 import MeteomaticsApi from "./MeteomaticsApi";
+import OpenMeteoApi from "./OpenMeteoApi";
 
 export {
 	AccuWeatherApi,
@@ -10,4 +11,5 @@ export {
 	OpenWeatherApi,
 	GismeteoApi,
 	MeteomaticsApi,
+	OpenMeteoApi,
 };
