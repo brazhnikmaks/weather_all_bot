@@ -26,7 +26,6 @@ class AccuWeatherApi {
 				if (Details) {
 					placeId = Details.Key;
 				}
-				console.log(responseL.data);
 			} catch (e) {
 				// @ts-ignore
 				// console.log("location", e.response.data);
