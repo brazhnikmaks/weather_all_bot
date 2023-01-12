@@ -31,19 +31,17 @@ class WeatherService {
 	async getAllKyivWeathers(): Promise<IWeatherData[]> {
 		const lat = 50.459532;
 		const lon = 30.589909;
-		const KyivWeathers: IWeatherData[] = [];
 
-		//weather by lat + lon
-		const otherWeathers = await this.getWeathers(lat, lon);
-		KyivWeathers.push(...otherWeathers);
+		const [weathers, gismeteoKyivWeather] = await Promise.all([
+			this.getWeathers(lat, lon),
+			GismeteoApi.getKyivWeather(),
+		]);
 
-		//only Kyiv weathers
-		const gismeteoKyivWeather = await GismeteoApi.getKyivWeather();
 		if (gismeteoKyivWeather) {
-			KyivWeathers.push(gismeteoKyivWeather);
+			weathers.push(gismeteoKyivWeather);
 		}
 
-		return KyivWeathers;
+		return weathers;
 	}
 }
 
