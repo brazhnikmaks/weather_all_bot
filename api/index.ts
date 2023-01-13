@@ -7,6 +7,7 @@ import OpenMeteoApi from "./OpenMeteoApi";
 import TomorrowIoApi from "./TomorrowIoApi";
 import StormglassApi from "./StormglassApi";
 import AzureApi from "./AzureApi";
+import ForecaApi from "./ForecaApi";
 
 export {
 	AccuWeatherApi,
@@ -18,4 +19,5 @@ export {
 	TomorrowIoApi,
 	StormglassApi,
 	AzureApi,
+	ForecaApi,
 };
