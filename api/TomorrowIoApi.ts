@@ -1,6 +1,9 @@
+import { config } from "dotenv";
 import axios from "axios";
 import { IWeatherData } from "../types";
 import { ITomorrowIoData } from "../types/tomorrowio";
+
+config();
 
 class TomorrowIoApi {
 	static async getWeather(

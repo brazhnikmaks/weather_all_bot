@@ -1,6 +1,9 @@
+import { config } from "dotenv";
 import axios from "axios";
 import { IWeatherData } from "../types";
 import { IStormglassData } from "../types/stormglass";
+
+config();
 
 class StormglassApi {
 	static async getWeather(
@@ -28,7 +31,8 @@ class StormglassApi {
 				wind: Math.round(windSpeed.sg * 10) / 10,
 			};
 		} catch (e) {
-			console.log(e);
+			// @ts-ignore
+			console.log(e.statusText);
 			return null;
 		}
 	}

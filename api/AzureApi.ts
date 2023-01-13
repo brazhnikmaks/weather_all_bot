@@ -1,7 +1,10 @@
+import { config } from "dotenv";
 import axios from "axios";
 import { kmph_to_mps } from "../utils/";
 import { IWeatherData } from "../types";
 import { ICurrentConditionsResult } from "../types/azure";
+
+config();
 
 class AzureApi {
 	static async getWeather(
