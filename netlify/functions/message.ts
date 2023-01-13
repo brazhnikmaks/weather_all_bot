@@ -4,11 +4,7 @@ import botController from "../../controllers/bot-controller";
 
 const handler: Handler = async (event: HandlerEvent) => {
 	const message = JSON.parse(event.body!).message as Message;
-	if (message.location) {
-		await botController.onLocation(message);
-	} else {
-		await botController.onMessage(message);
-	}
+
 	console.log(
 		JSON.stringify({
 			username: message.from?.username,
@@ -18,6 +14,12 @@ const handler: Handler = async (event: HandlerEvent) => {
 			...(message.location ? { location: message.location } : {}),
 		}),
 	);
+
+	if (message.location) {
+		await botController.onLocation(message);
+	} else {
+		await botController.onMessage(message);
+	}
 	return { statusCode: 200 };
 };
 
