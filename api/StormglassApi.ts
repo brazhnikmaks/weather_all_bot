@@ -1,25 +1,6 @@
 import axios from "axios";
 import { IWeatherData } from "../types";
-
-type StormglassValueType = { sg: number };
-
-type StormglassDataType = {
-	hours: {
-		airTemperature: StormglassValueType;
-		time: string;
-		windSpeed: StormglassValueType;
-	}[];
-	meta: {
-		cost: number;
-		dailyQuota: number;
-		end: string;
-		lat: number;
-		lng: number;
-		params: string[];
-		requestCount: number;
-		start: string;
-	};
-};
+import { IStormglassData } from "../types/stormglass";
 
 class StormglassApi {
 	static async getWeather(
@@ -30,7 +11,7 @@ class StormglassApi {
 			return null;
 		try {
 			const date = new Date().toISOString();
-			const response = await axios.get<StormglassDataType>(
+			const response = await axios.get<IStormglassData>(
 				`https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${lon}&params=airTemperature,windSpeed&start=${date}&end=${date}`,
 				{
 					headers: {

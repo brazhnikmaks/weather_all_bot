@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import axios from "axios";
 import { kmph_to_mps } from "../utils/";
 import { IWeatherData } from "../types";
+import { IWeatherApiData } from "../types/weatherapi";
 
 config();
 
@@ -13,11 +14,13 @@ class WeatherApi {
 		if (!process.env.WEATHERAPI_KEY || lat === undefined || lon === undefined)
 			return null;
 		try {
-			const response = await axios.get(
+			const response = await axios.get<IWeatherApiData>(
 				`https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHERAPI_KEY}&q=${lat},${lon}`,
 			);
 
 			const { current } = response.data;
+
+			console.log(response.data);
 
 			return {
 				name: "💧weather api",

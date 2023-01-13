@@ -2,17 +2,9 @@ import { config } from "dotenv";
 import axios from "axios";
 import { CurrentConditions } from "openweather-api-node";
 import { IWeatherData } from "../types";
+import { IOpenWeatherMain } from "../types/openweather";
 
 config();
-
-type OpenWeatherMainType = {
-	temp: number;
-	feels_like: number;
-	temp_min: number;
-	temp_max: number;
-	pressure: number;
-	humidity: number;
-};
 
 class OpenWeatherApi {
 	static async getWeather(
@@ -26,7 +18,7 @@ class OpenWeatherApi {
 				`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_KEY}&units=metric`,
 			);
 			const { main, wind } = response.data;
-			const { temp, feels_like } = main as unknown as OpenWeatherMainType;
+			const { temp, feels_like } = main as unknown as IOpenWeatherMain;
 
 			return {
 				name: "🌅OpenWeather",

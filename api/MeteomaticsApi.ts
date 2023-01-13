@@ -1,28 +1,9 @@
 import { config } from "dotenv";
 import axios from "axios";
 import { IWeatherData } from "../types";
+import { IMeteomaticsData } from "../types/meteomatics";
 
 config();
-
-type MeteomaticsParamType = {
-	parameter: string;
-	coordinates: {
-		lat: number;
-		lon: number;
-		dates: {
-			date: string;
-			value: number;
-		}[];
-	}[];
-};
-
-type MeteomaticsDataType = {
-	version: string;
-	user: string;
-	dateGenerated: string;
-	status: string;
-	data: MeteomaticsParamType[];
-};
 
 class MeteomaticsApi {
 	static async getWeather(
@@ -32,7 +13,7 @@ class MeteomaticsApi {
 		if (!process.env.METEOMATICS_AUTH || lat === undefined || lon === undefined)
 			return null;
 		try {
-			const response = await axios.get<MeteomaticsDataType>(
+			const response = await axios.get<IMeteomaticsData>(
 				`https://${
 					process.env.METEOMATICS_AUTH
 				}@api.meteomatics.com/${new Date().toISOString()}/t_2m:C,wind_speed_10m:ms/${lat},${lon}/json`,

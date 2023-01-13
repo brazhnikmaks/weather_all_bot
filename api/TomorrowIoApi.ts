@@ -1,23 +1,6 @@
 import axios from "axios";
 import { IWeatherData } from "../types";
-
-type TomorrowIoDataType = {
-	data: {
-		timelines: {
-			timestep: string;
-			endTime: string;
-			startTime: string;
-			intervals: {
-				startTime: string;
-				values: {
-					temperature: number;
-					temperatureApparent: number;
-					windSpeed: number;
-				};
-			}[];
-		}[];
-	};
-};
+import { ITomorrowIoData } from "../types/tomorrowio";
 
 class TomorrowIoApi {
 	static async getWeather(
@@ -27,7 +10,7 @@ class TomorrowIoApi {
 		if (!process.env.TOMORROWIO_KEY || lat === undefined || lon === undefined)
 			return null;
 		try {
-			const response = await axios.get<TomorrowIoDataType>(
+			const response = await axios.get<ITomorrowIoData>(
 				`https://api.tomorrow.io/v4/timelines?location=${lat},${lon}&fields=temperature,temperatureApparent,windSpeed&timesteps=current&units=metric&apikey=${process.env.TOMORROWIO_KEY}`,
 			);
 
