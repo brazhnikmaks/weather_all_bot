@@ -6,6 +6,7 @@ import MeteomaticsApi from "./MeteomaticsApi";
 import OpenMeteoApi from "./OpenMeteoApi";
 import TomorrowIoApi from "./TomorrowIoApi";
 import StormglassApi from "./StormglassApi";
+import AzureApi from "./AzureApi";
 
 export {
 	AccuWeatherApi,
@@ -16,4 +17,5 @@ export {
 	OpenMeteoApi,
 	TomorrowIoApi,
 	StormglassApi,
+	AzureApi,
 };

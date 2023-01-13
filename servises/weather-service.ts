@@ -7,6 +7,7 @@ import {
 	OpenMeteoApi,
 	TomorrowIoApi,
 	StormglassApi,
+	AzureApi,
 } from "../api";
 import { IWeatherData } from "../types";
 
@@ -14,6 +15,7 @@ class WeatherService {
 	async getWeathers(lat: number, lon: number): Promise<IWeatherData[]> {
 		const weathersResponses = await Promise.all([
 			AccuWeatherApi.getWeather(lat, lon),
+			AzureApi.getWeather(lat, lon),
 			WeatherApi.getWeather(lat, lon),
 			OpenWeatherApi.getWeather(lat, lon),
 			MeteomaticsApi.getWeather(lat, lon),
