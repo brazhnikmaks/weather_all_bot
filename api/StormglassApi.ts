@@ -32,7 +32,7 @@ class StormglassApi {
 			};
 		} catch (e) {
 			// @ts-ignore
-			console.log({ api: "Stormglass", ...e.response.data });
+			console.log(JSON.stringify({ api: "Stormglass", ...e.response.data }));
 			return null;
 		}
 	}
