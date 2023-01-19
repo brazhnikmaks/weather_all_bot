@@ -1,5 +1,5 @@
-import { bot } from "./servises/telefram-service";
+import TelegramBot from "./servises/telefram-service";
 import BotController from "./controllers/bot-controller";
 
-bot.on("message", BotController.onMessage);
-bot.on("location", BotController.onLocation);
+TelegramBot.on("message", BotController.onMessage.bind(BotController));
+TelegramBot.on("location", BotController.onLocation.bind(BotController));

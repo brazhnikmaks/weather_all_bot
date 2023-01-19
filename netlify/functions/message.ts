@@ -1,6 +1,6 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
 import { Message } from "node-telegram-bot-api";
-import botController from "../../controllers/bot-controller";
+import BotController from "../../controllers/bot-controller";
 
 const handler: Handler = async (event: HandlerEvent) => {
 	const message = JSON.parse(event.body!).message as Message;
@@ -16,9 +16,9 @@ const handler: Handler = async (event: HandlerEvent) => {
 	);
 
 	if (message.location) {
-		await botController.onLocation(message);
+		await BotController.onLocation.bind(BotController)(message);
 	} else {
-		await botController.onMessage(message);
+		await BotController.onMessage.bind(BotController)(message);
 	}
 	return { statusCode: 200 };
 };

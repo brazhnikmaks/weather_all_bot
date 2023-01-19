@@ -1,17 +1,46 @@
-import { Message } from "node-telegram-bot-api";
-import { bot } from "../servises/telefram-service";
+import {
+	Message,
+	SendMessageOptions,
+	KeyboardButton,
+} from "node-telegram-bot-api";
+import TelegramBot from "../servises/telefram-service";
 import WeatherService from "../servises/weather-service";
 import { IWeatherData } from "../types";
 
-// all chat icons ❄☔⛅👅💨🌞☁📍🌡️🤒
-
 class BotController {
 	constructor() {
-		bot.setMyCommands([
-			{ command: "/start", description: "Запуск бота" },
+		this.setCommands();
+	}
+
+	async setCommands() {
+		await TelegramBot.setMyCommands([
 			{ command: "/kyiv", description: "Шо по погоді в Києві" },
 			{ command: "/location", description: "Погода за мапою" },
 		]);
+	}
+
+	setReplyKeyboard(): SendMessageOptions {
+		const keyboard: KeyboardButton[][] = [];
+
+		keyboard.push(
+			[
+				{
+					text: "Шо по погоді в Києві",
+				},
+			],
+			// [
+			// 	{
+			// 		text: "Погода за мапою",
+			// 	},
+			// ],
+		);
+
+		return {
+			reply_markup: {
+				resize_keyboard: true,
+				keyboard,
+			},
+		};
 	}
 
 	static weathersToString(location: string, weathers: IWeatherData[]) {
@@ -36,61 +65,76 @@ class BotController {
 		return weatherString;
 	}
 
-	static sendError(chatId: number) {
-		bot.sendMessage(chatId, `Помилочка  ¯\\_(ツ)_/¯`);
+	async sendError(chatId: number) {
+		await TelegramBot.sendMessage(chatId, `Помилочка  ¯\\_(ツ)_/¯`);
 	}
 
-	static sendLoading(chatId: number) {
-		bot.sendMessage(chatId, `Чекайте, збираю інформацію...`, {
-			reply_markup: {
-				remove_keyboard: true,
+	async sendLoading(chatId: number, options?: SendMessageOptions) {
+		await TelegramBot.sendMessage(
+			chatId,
+			`Чекайте, збираю інформацію...`,
+			options,
+		);
+	}
+
+	async onStart(chatId: number) {
+		await this.setCommands();
+		return await TelegramBot.sendMessage(
+			chatId,
+			`Вітаю в телеграм боті погоди, скористайтеся кнопкою "Меню" або кнопками внизу, щоб щось зробити.`,
+			this.setReplyKeyboard(),
+		);
+	}
+
+	async onKyiv(chatId: number) {
+		await this.sendLoading(chatId);
+
+		const KyivWeathers = await WeatherService.getAllKyivWeathers();
+
+		if (!KyivWeathers.length) {
+			return await this.sendError(chatId);
+		}
+
+		return await TelegramBot.sendMessage(
+			chatId!,
+			BotController.weathersToString("Київ", KyivWeathers),
+			{ ...this.setReplyKeyboard(), parse_mode: "Markdown" },
+		);
+	}
+
+	async onMap(chatId: number) {
+		return await TelegramBot.sendMessage(
+			chatId!,
+			`Надішліть локацію, яка вас цікавить\nабо натисніть кнопку внизу, щоб поділитися вашею локацією\n(Задіяно менше джерел)`,
+			{
+				parse_mode: "Markdown",
+				reply_markup: {
+					one_time_keyboard: true,
+					resize_keyboard: true,
+					keyboard: [[{ text: "Моя локація", request_location: true }]],
+				},
 			},
-		});
+		);
 	}
 
 	async onMessage(msg: Message) {
-		const text = msg.text;
-		const chatId = msg.chat.id;
+		const {
+			text,
+			chat: { id: chatId },
+		} = msg;
 
 		try {
-			if (text === "/start") {
-				return bot.sendMessage(
-					chatId,
-					`Вітаю в телеграм боті погоди, скористайтеся кнопкою "Меню", щоб щось зробити`,
-				);
-			}
-
-			if (text === "/kyiv") {
-				BotController.sendLoading(chatId);
-
-				const KyivWeathers = await WeatherService.getAllKyivWeathers();
-
-				if (!KyivWeathers.length) {
-					return BotController.sendError(chatId);
-				}
-
-				return bot.sendMessage(
-					chatId!,
-					BotController.weathersToString("Київ", KyivWeathers),
-					{
-						parse_mode: "Markdown",
-					},
-				);
-			}
-
-			if (text === "/location") {
-				bot.sendMessage(
-					chatId!,
-					`Надішліть локацію, яка вас цікавить\nабо натисніть кнопку внизу, щоб поділитися вашею локацією\n(Задіяно менше джерел)`,
-					{
-						parse_mode: "Markdown",
-						reply_markup: {
-							one_time_keyboard: true,
-							resize_keyboard: true,
-							keyboard: [[{ text: "Моя локація", request_location: true }]],
-						},
-					},
-				);
+			switch (text) {
+				case "/start":
+					return await this.onStart(chatId);
+				case "/kyiv":
+				case "Шо по погоді в Києві":
+					return await this.onKyiv(chatId);
+				case "/location":
+				case "Погода за мапою":
+					return await this.onMap(chatId);
+				default:
+					return;
 			}
 		} catch (e) {
 			console.log(e);
@@ -102,10 +146,14 @@ class BotController {
 		const chatId = msg.chat.id;
 
 		if (!location) {
-			return BotController.sendError(chatId);
+			return await this.sendError(chatId);
 		}
 
-		BotController.sendLoading(chatId);
+		await this.sendLoading(chatId, {
+			reply_markup: {
+				remove_keyboard: true,
+			},
+		});
 
 		const weathers = await WeatherService.getWeathers(
 			location.latitude,
@@ -113,15 +161,13 @@ class BotController {
 		);
 
 		if (!weathers.length) {
-			return BotController.sendError(chatId);
+			return await this.sendError(chatId);
 		}
 
-		return bot.sendMessage(
+		return await TelegramBot.sendMessage(
 			chatId!,
 			BotController.weathersToString("", weathers),
-			{
-				parse_mode: "Markdown",
-			},
+			{ ...this.setReplyKeyboard(), parse_mode: "Markdown" },
 		);
 	}
 }
