@@ -16,6 +16,7 @@ class BotController {
 		await TelegramBot.setMyCommands([
 			{ command: "/kyiv", description: "Шо по погоді в Києві" },
 			{ command: "/location", description: "Погода за мапою" },
+			{ command: "/help", description: "Допомога" },
 		]);
 	}
 
@@ -117,6 +118,13 @@ class BotController {
 		);
 	}
 
+	async onHelp(chatId: number) {
+		return await TelegramBot.sendMessage(
+			chatId,
+			`Тут можна дізнатись про погоду з різних джерел та порівняти її.\n\n/kyiv - погода в Києві.\n\n/location - погода вашого місцезнаходження або у точці на мапі (потрібно вислати точку на мапі з меню "скріпки").`,
+		);
+	}
+
 	async onMessage(msg: Message) {
 		const {
 			text,
@@ -134,7 +142,7 @@ class BotController {
 				case "Погода за мапою":
 					return await this.onMap(chatId);
 				default:
-					return;
+					return await this.onHelp(chatId);
 			}
 		} catch (e) {
 			console.log(e);
