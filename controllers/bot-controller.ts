@@ -23,18 +23,15 @@ class BotController {
 	setReplyKeyboard(): SendMessageOptions {
 		const keyboard: KeyboardButton[][] = [];
 
-		keyboard.push(
-			[
-				{
-					text: "Шо по погоді в Києві",
-				},
-			],
-			// [
-			// 	{
-			// 		text: "Погода за мапою",
-			// 	},
-			// ],
-		);
+		keyboard.push([
+			{
+				text: "Шо по погоді в Києві",
+			},
+			{
+				text: "Погода за мапою",
+				request_location: true,
+			},
+		]);
 
 		return {
 			reply_markup: {
@@ -139,7 +136,6 @@ class BotController {
 				case "Шо по погоді в Києві":
 					return await this.onKyiv(chatId);
 				case "/location":
-				case "Погода за мапою":
 					return await this.onMap(chatId);
 				default:
 					return await this.onHelp(chatId);
