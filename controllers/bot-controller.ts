@@ -206,7 +206,7 @@ class BotController {
 				await db.getChat(chatId);
 				console.log("get");
 			} catch (e) {
-				await db.addChat(chatId);
+				await db.addChat(chatId, from);
 				console.log("add");
 			} finally {
 				this.chatAdded[chatId] = chatId;
