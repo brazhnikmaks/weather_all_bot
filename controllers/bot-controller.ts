@@ -5,11 +5,17 @@ import {
 } from "node-telegram-bot-api";
 import TelegramBot from "../servises/telefram-service";
 import WeatherService from "../servises/weather-service";
+import db from "../servises/mongo-service";
 import { IWeatherData } from "../types";
 
 class BotController {
+	chatAdded: {
+		[key: number]: number;
+	};
+
 	constructor() {
 		this.setCommands();
+		this.chatAdded = {};
 	}
 
 	async setCommands() {
@@ -131,15 +137,21 @@ class BotController {
 		try {
 			switch (text) {
 				case "/start":
-					return await this.onStart(chatId);
+					await this.onStart(chatId);
+					break;
 				case "/kyiv":
 				case "Шо по погоді в Києві":
-					return await this.onKyiv(chatId);
+					await this.onKyiv(chatId);
+					break;
 				case "/location":
-					return await this.onMap(chatId);
+					await this.onMap(chatId);
+					break;
 				default:
-					return await this.onHelp(chatId);
+					await this.onHelp(chatId);
+					break;
 			}
+
+			await this.addUser(msg);
 		} catch (e) {
 			console.log(e);
 		}
@@ -168,11 +180,38 @@ class BotController {
 			return await this.sendError(chatId);
 		}
 
-		return await TelegramBot.sendMessage(
+		await TelegramBot.sendMessage(
 			chatId!,
 			BotController.weathersToString("", weathers),
 			{ ...this.setReplyKeyboard(), parse_mode: "Markdown" },
 		);
+
+		await this.addUser(msg);
+	}
+
+	async addUser(msg: Message) {
+		const {
+			chat: { id: chatId },
+			from,
+		} = msg;
+
+		if (this.chatAdded[chatId]) {
+			return;
+		}
+
+		try {
+			await db.connect();
+			console.log("connect");
+			try {
+				await db.getChat(chatId);
+				console.log("get");
+			} catch (e) {
+				await db.addChat(chatId);
+				console.log("add");
+			} finally {
+				this.chatAdded[chatId] = chatId;
+			}
+		} catch (e) {}
 	}
 }
 
